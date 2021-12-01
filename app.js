@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const models = require('./models/index.js');
+const sequelize = require('./models/index.js').sequelize;
 
 var app = express();
 
@@ -22,6 +22,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established.');
+  } catch (error) {
+    console.error('Unable to connect to database.', error);
+  }
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
