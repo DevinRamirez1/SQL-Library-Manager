@@ -3,10 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var Book = require('./models');
 
 var indexRouter = require('./routes/index');
 var booksRouter = require('./routes/books');
-const sequelize = require('./models/index.js').sequelize;
+
 
 var app = express();
 
@@ -22,15 +23,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/books', booksRouter);
-
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection has been established.');
-  } catch (error) {
-    console.error('Unable to connect to database.', error);
-  }
-})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
