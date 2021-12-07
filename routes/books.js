@@ -74,6 +74,13 @@ function asyncHandler(cb){
 
   //Deletes book from database
   router.post('/books/:id/delete', asyncHandler(async (req, res) => {
-
+    const book = await Book.findByPk(req.params.id);
+    if (book) {
+       await book.destroy();
+       res.redirect('/books');
+    } else {
+        res.sendStatus(404);
+    }
   }));
+  
   module.exports = router;
