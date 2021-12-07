@@ -13,14 +13,35 @@ function asyncHandler(cb){
     }
   }
 
-  router.get('/', asyncHandler(async (req, res) => {
+  //Get books
+  router.get('/books', asyncHandler(async (req, res) => {
     const books = await Book.findAll({ order: [['createdAt', 'DESC']]});
     res.render('index', { books });
   }));
 
-  router.post('/', asyncHandler(async (req, res) => {
+  //create new book
+  router.get('/books/new', asyncHandler(async (req, res) => {
       const book = await Book.create(req.body);
       res.redirect("/books/" + book.id);
-  }))
+  }));
 
+  //add new book to db
+  router.post('/books/new', asyncHandler(async (req, res) => {
+
+  }));
+
+  //show book detail form
+  router.get('/books/:id', asyncHandler(async (req, res) => {
+
+  }));
+
+  //Updates book info in the database
+  router.post('/books/:id', asyncHandler(async (req, res) => {
+
+  }));
+
+  //Deletes book from database
+  router.post('/books/:id/delete', asyncHandler(async (req, res) => {
+
+  }));
   module.exports = router;
