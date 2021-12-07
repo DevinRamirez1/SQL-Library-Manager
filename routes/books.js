@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
+const Sequelize = require('sequelize');
+const { Op } = Sequelize.Op;
 
 //Handler function to wrap each route
 function asyncHandler(cb){
