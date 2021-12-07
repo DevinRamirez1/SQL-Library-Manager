@@ -42,12 +42,34 @@ function asyncHandler(cb){
 
   //show book detail form
   router.get('/books/:id', asyncHandler(async (req, res) => {
-
+    const book = await Book.findByPk(req.params.id);
+    if (book) {
+        res.render('/books/:id', { book, title: 'Update Book'});
+    } else {
+        res.sendStatus(404);
+    }
   }));
 
   //Updates book info in the database
   router.post('/books/:id', asyncHandler(async (req, res) => {
-
+    let book;
+    try {
+        book = await Book.findByPk(req.params.id);
+        if (book) {
+            await book.update(req.body);
+            res.redirect('/books/' + book.id);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (error) {
+        if (error.name === 'SequelizationValidationError') {
+            book = await Book.build(req.body);
+            book.id = req.params.id;
+            res.render('/books/:id', { book, errors: error.errors, title: 'Edit Article'})
+        } else {
+            throw error;
+        }
+    }
   }));
 
   //Deletes book from database
