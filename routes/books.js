@@ -26,7 +26,18 @@ function asyncHandler(cb){
 
   //add new book to db
   router.post('/books/new', asyncHandler(async (req, res) => {
-    
+    let book;
+    try {
+        const book = await Book.create(req.body);
+        res.redirect('/books/' + book.id);
+    } catch (error) {
+        if (error.name === 'SeqeuelizeValidationError') {
+            book = await Book.build(req.body);
+            res.render('/books/new', { book, errors: error.errors, title: 'New Book'})
+        } else {
+            throw error;
+        }
+    }
   }));
 
   //show book detail form
