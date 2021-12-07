@@ -21,7 +21,7 @@ function asyncHandler(cb){
 
   //create new book
   router.get('/books/new',(req, res) => {
-    res.render("/books/new", { book: {}, title: "New Book"});
+    res.render("new-book", { book: {}, title: "New Book"});
   });
 
   //add new book to db
@@ -33,7 +33,7 @@ function asyncHandler(cb){
     } catch (error) {
         if (error.name === 'SeqeuelizeValidationError') {
             book = await Book.build(req.body);
-            res.render('/books/new', { book, errors: error.errors, title: 'New Book'})
+            res.render('new-book', { book, errors: error.errors, title: 'New Book'})
         } else {
             throw error;
         }
@@ -44,7 +44,7 @@ function asyncHandler(cb){
   router.get('/books/:id', asyncHandler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
-        res.render('/books/:id', { book, title: 'Update Book'});
+        res.render('update-book', { book, title: 'Update Book'});
     } else {
         res.sendStatus(404);
     }
@@ -65,7 +65,7 @@ function asyncHandler(cb){
         if (error.name === 'SequelizationValidationError') {
             book = await Book.build(req.body);
             book.id = req.params.id;
-            res.render('/books/:id', { book, errors: error.errors, title: 'Edit Article'})
+            res.render('update-book', { book, errors: error.errors, title: 'Update Book'})
         } else {
             throw error;
         }
@@ -82,5 +82,5 @@ function asyncHandler(cb){
         res.sendStatus(404);
     }
   }));
-  
+
   module.exports = router;
