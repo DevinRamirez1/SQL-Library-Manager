@@ -13,9 +13,14 @@ function asyncHandler(cb){
     }
   }
 
-  router.get('/books', asyncHandler(async (req, res) => {
+  router.get('/', asyncHandler(async (req, res) => {
     const books = await Book.findAll({ order: [['createdAt', 'DESC']]});
-    res.render('views/index', { books });
+    res.render('index', { books });
   }));
+
+  router.post('/', asyncHandler(async (req, res) => {
+      const book = await Book.create(req.body);
+      res.redirect("/books/" + book.id);
+  }))
 
   module.exports = router;
