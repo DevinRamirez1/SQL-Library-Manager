@@ -17,3 +17,5 @@ function asyncHandler(cb){
     const books = await Book.findAll({ order: [['createdAt', 'DESC']]});
     res.render('views/index', { books });
   }));
+
+  module.exports = router;
