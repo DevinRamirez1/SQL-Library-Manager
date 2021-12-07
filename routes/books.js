@@ -20,14 +20,13 @@ function asyncHandler(cb){
   }));
 
   //create new book
-  router.get('/books/new', asyncHandler(async (req, res) => {
-      const book = await Book.create(req.body);
-      res.redirect("/books/" + book.id);
-  }));
+  router.get('/books/new',(req, res) => {
+    res.render("/books/new", { book: {}, title: "New Book"});
+  });
 
   //add new book to db
   router.post('/books/new', asyncHandler(async (req, res) => {
-
+    
   }));
 
   //show book detail form
