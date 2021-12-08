@@ -22,12 +22,12 @@ function asyncHandler(cb){
   }));
 
   //create new book
-  router.get('/books/new',(req, res) => {
+  router.get('/new',(req, res) => {
     res.render("new-book", { book: {}, title: "New Book"});
   });
 
   //add new book to db
-  router.post('/books/new', asyncHandler(async (req, res) => {
+  router.post('/new', asyncHandler(async (req, res) => {
     let book;
     try {
         const book = await Book.create(req.body);
