@@ -16,7 +16,7 @@ function asyncHandler(cb){
   }
 
   //Get books
-  router.get('/books', asyncHandler(async (req, res) => {
+  router.get('/', asyncHandler(async (req, res) => {
     const books = await Book.findAll({ order: [['createdAt', 'DESC']]});
     res.render('index', { books });
   }));
