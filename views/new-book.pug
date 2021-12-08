@@ -1,24 +1,24 @@
 extends layout
 
 block content 
-    h1 Books 
+    h1= title  
 
     include errors 
 
     form(action="/books/new", method="post") 
         p
             label(for="title") Title 
-            input#title(name="title" type="text" id="title")
+            input#title(name="title" type="text" value="title")
         p
             label(for="author") Author 
-            input#author(name="author" type="text" id="author")
+            input#author(name="author" type="text" value="author")
         p 
             label(for="genre") Genre 
-            input#genre(name="genre" type="text" id="genre")
+            input#genre(name="genre" type="text" value="genre")
         p 
             label(for="year") Year 
-            input#year(name="year" type="text" id="year")
+            input#year(name="year" type="text" value="year")
         p 
-            input#submit(name="submit", value="Create New Book")
+            input(type="submit", value="Create New Book")
         p 
             a.button#cancel(href='/books') Cancel
