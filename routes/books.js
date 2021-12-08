@@ -31,7 +31,7 @@ function asyncHandler(cb){
     let book;
     try {
         const book = await Book.create(req.body);
-        res.redirect('/books/' + book.id);
+        res.redirect('/books/');
     } catch (error) {
         if (error.name === 'SeqeuelizeValidationError') {
             book = await Book.build(req.body);
@@ -59,7 +59,7 @@ function asyncHandler(cb){
         book = await Book.findByPk(req.params.id);
         if (book) {
             await book.update(req.body);
-            res.redirect('/books/' + book.id);
+            res.redirect('/books/');
         } else {
             res.sendStatus(404);
         }
