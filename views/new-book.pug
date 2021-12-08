@@ -1,0 +1,24 @@
+extends layout
+
+block content 
+    h1 Books 
+
+    include errors 
+
+    form(action="/books/new", method="post") 
+        p
+            label(for="title") Title 
+            input#title(name="title" type="text" id="title")
+        p
+            label(for="author") Author 
+            input#author(name="author" type="text" id="author")
+        p 
+            label(for="genre") Genre 
+            input#genre(name="genre" type="text" id="genre")
+        p 
+            label(for="year") Year 
+            input#year(name="year" type="text" id="year")
+        p 
+            input#submit(name="submit", value="Create New Book")
+        p 
+            a.button#cancel(href='/books') Cancel
