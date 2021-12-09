@@ -79,7 +79,7 @@ function asyncHandler(cb){
     const book = await Book.findByPk(req.params.id);
     if (book) {
        await book.destroy();
-       res.redirect('/books');
+       res.redirect('/books/');
     } else {
         res.sendStatus(404);
     }
