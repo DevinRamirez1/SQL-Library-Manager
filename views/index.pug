@@ -21,3 +21,10 @@ block content
                     td= book.author 
                     td= book.genre 
                     td= book.year 
+    - var n = 1;
+    - var isActive; 
+    footer 
+        while n <= pages 
+            - isActive = activePage == n;
+            a.pages(href='/books/page/${n}' class= isActive ? 'active' : '')= n 
+            - n++
