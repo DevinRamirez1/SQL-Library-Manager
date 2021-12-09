@@ -33,7 +33,7 @@ function asyncHandler(cb){
         const book = await Book.create(req.body);
         res.redirect('/books/');
     } catch (error) {
-        if (error.name === 'SeqeuelizeValidationError') {
+        if (error.name === 'SequelizeValidationError') {
             book = await Book.build(req.body);
             res.render('new-book', { book, errors: error.errors, title: 'New Book'})
         } else {
@@ -64,7 +64,7 @@ function asyncHandler(cb){
             res.sendStatus(404);
         }
     } catch (error) {
-        if (error.name === 'SequelizationValidationError') {
+        if (error.name === 'SequelizeValidationError') {
             book = await Book.build(req.body);
             book.id = req.params.id;
             res.render('update-book', { book, errors: error.errors, title: 'Update Book'})
