@@ -3,7 +3,7 @@ extends layout
 block content
     h1= title
 
-    form(action="/books/:id", method="post")
+    form(action="/books/" + book.id, method="post")
         p 
             label(for="title") Title 
             input#title(name="title" type="text" value= book.title)
@@ -19,7 +19,7 @@ block content
         p 
             input(type="submit", value="Update Book Info")
         p  
-    form(action="/books/:id/delete", method="post")
+    form(action="/books" + book.id + "/delete", method="post")
         p 
             a.button#cancel(href="/books") Cancel 
         p 
