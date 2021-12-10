@@ -78,7 +78,7 @@ function asyncHandler(cb){
     if (book) {
         res.render('update-book', { book, title: 'Update Book'});
     } else {
-        res.sendStatus(404);
+        res.sendStatus(404, "That book does not exist. Please try again.");
     }
   }));
 
@@ -91,7 +91,7 @@ function asyncHandler(cb){
             await book.update(req.body);
             res.redirect('/books/');
         } else {
-            res.sendStatus(404);
+            res.sendStatus(404, "That book does not exist. Please try again.");
         }
     } catch (error) {
         if (error.name === 'SequelizeValidationError') {
@@ -111,7 +111,7 @@ function asyncHandler(cb){
        await book.destroy();
        res.redirect('/books/');
     } else {
-        res.sendStatus(404);
+        res.sendStatus(404, "That book does not exist. Please try again.");
     }
   }));
 
