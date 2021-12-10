@@ -95,3 +95,11 @@ input[type=text] {
 .error {
   color: rgb(236, 15, 15);
 }
+
+table {
+  padding: 20px 0px 10px;
+}
+
+.pages {
+  padding: 10px 10px 10px
+}
