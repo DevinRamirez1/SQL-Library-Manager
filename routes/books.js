@@ -25,6 +25,7 @@ function asyncHandler(cb){
     console.log(pages);
     res.render('index', { 
       books: rows,
+      title: "Books",
       pages,
       activePage: 1,
      });
@@ -40,10 +41,11 @@ function asyncHandler(cb){
       limit,
       offset,
     });
-    const pages = Math.ceil(count / 5);
+    const pages = Math.ceil(count / 10);
     console.log(activePage);
     res.render('index', {
       books: rows,
+      title: "Books",
       pages,
       activePage,
     });
@@ -112,5 +114,43 @@ function asyncHandler(cb){
         res.sendStatus(404);
     }
   }));
+
+  //Handles search
+  router.get('/search', asyncHandler(async (req, res) => {
+    const searchQuery = req.search.body;
+    const searchResults = await Book.findAll({
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: '%' + searchQuery + '%',
+            },
+          },
+          {
+            author: {
+              [Op.like]: '%' + searchQuery + '%',
+            },
+          },
+          {
+            genre: {
+              [Op.like]: '%' + searchQuery + '%',
+            },
+          },
+          {
+            year: {
+              [Op.like]: '%' + searchQuery + '%',
+            },
+          },
+        ],
+      },
+    });
+    let title;
+    if (searchResults.length < 1) {
+      title = 'No Results, Please Try Again.';
+    } else {
+      title = 'Search Results: ${searchResults.length}';
+    }
+    res.render('index', { searchResults, title:title})
+  }))
 
   module.exports = router;
