@@ -116,8 +116,8 @@ function asyncHandler(cb){
   }));
 
   //Handles search
-  router.get('/search', asyncHandler(async (req, res) => {
-    const searchQuery = req.search.body;
+  router.get('/search', asyncHandler(async (req, res, next) => {
+    const searchQuery = req.query.search;
     const searchResults = await Book.findAll({
       where: {
         [Op.or]: [
@@ -143,14 +143,21 @@ function asyncHandler(cb){
           },
         ],
       },
+      limit: 10
     });
+    const pages = Math.ceil(count / 10);
     let title;
     if (searchResults.length < 1) {
       title = 'No Results, Please Try Again.';
     } else {
-      title = 'Search Results: ${searchResults.length}';
+      title = 'Search Results ${searchResults.length}';
     }
-    res.render('index', { searchResults, title:title})
+    res.render('index', { 
+      books: searchResults, 
+      title: title,
+      pages,
+      activePage: 1,
+    })
   }))
 
   module.exports = router;
