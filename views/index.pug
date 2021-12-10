@@ -31,5 +31,5 @@ block content
     footer 
         while n <= pages 
             - isActive = activePage == n;
-            a.pages(href='/books/page/${n}' class= isActive ? 'active' : '')= n 
+            a.pages(href='/books/page_:${n}' class= isActive ? 'active' : '')= n 
             - n++

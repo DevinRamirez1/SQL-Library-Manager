@@ -21,8 +21,8 @@ function asyncHandler(cb){
       order: [['createdAt', 'DESC']],
       limit: 10
     });
-    const pages = Math.ceil(count / 5);
-    console.log(pages);
+    const pages = Math.ceil(count /10);
+    console.log(pages)
     res.render('index', { 
       books: rows,
       title: "Books",
@@ -32,17 +32,17 @@ function asyncHandler(cb){
   }));
 
   //Get specific page
-  router.get('/page/:id', asyncHandler(async (req, res) => {
+  router.get('/page_:num', asyncHandler(async (req, res) => {
     const limit = 10;
-    const offset = req.params.id > 1 ? (req.params.id - 1) * limit : 0
-    const activePage = req.params.id;
+    const offset = req.params.num > 1 ? (req.params.num - 1) * limit : 0
+    const activePage = req.params.num;
     const { count, rows } = await Book.findAndCountAll({
       order: [['createdAt', 'DESC']],
       limit,
       offset,
     });
     const pages = Math.ceil(count / 10);
-    console.log(activePage);
+    console.log(activePage)
     res.render('index', {
       books: rows,
       title: "Books",
@@ -117,37 +117,45 @@ function asyncHandler(cb){
 
   //Handles search
   router.get('/search', asyncHandler(async (req, res, next) => {
-    const searchQuery = req.query.search;
-    const searchResults = await Book.findAll({
+    let { search } = req.query;
+    if (search) {
+    const { count, rows } = await Book.findAndCountAll({
       where: {
         [Op.or]: [
           {
             title: {
-              [Op.like]: '%' + searchQuery + '%',
+              [Op.like]: '%' + search + '%',
             },
           },
           {
             author: {
-              [Op.like]: '%' + searchQuery + '%',
+              [Op.like]: '%' + search + '%',
             },
           },
           {
             genre: {
-              [Op.like]: '%' + searchQuery + '%',
+              [Op.like]: '%' + search + '%',
             },
           },
           {
             year: {
-              [Op.like]: '%' + searchQuery + '%',
+              [Op.like]: '%' + search + '%',
             },
           },
         ],
+        limit: 10
       },
     });
+    const pages = Math.ceil(count / 10);
     res.render('index', { 
-      books: searchResults,
+      books: rows,
       title: "Search Results",
-    })
-  }))
+      pages,
+      activePage: 1
+    });
+  } else {
+    res.redirect('/')
+  }
+  }));
 
   module.exports = router;
