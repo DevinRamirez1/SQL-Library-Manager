@@ -143,9 +143,7 @@ function asyncHandler(cb){
           },
         ],
       },
-      limit: 10
     });
-    const pages = Math.ceil(count / 10);
     let title;
     if (searchResults.length < 1) {
       title = 'No Results, Please Try Again.';
@@ -155,8 +153,6 @@ function asyncHandler(cb){
     res.render('index', { 
       books: searchResults, 
       title: title,
-      pages,
-      activePage: 1,
     })
   }))
 
