@@ -144,15 +144,9 @@ function asyncHandler(cb){
         ],
       },
     });
-    let title;
-    if (searchResults.length < 1) {
-      title = 'No Results, Please Try Again.';
-    } else {
-      title = 'Search Results ${searchResults.length}';
-    }
     res.render('index', { 
-      books: searchResults, 
-      title: title,
+      books: searchResults,
+      title: "Search Results",
     })
   }))
 
