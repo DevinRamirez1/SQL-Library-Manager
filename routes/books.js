@@ -77,7 +77,8 @@ function asyncHandler(cb){
     router.get('/search', async (req, res) => {
       let { term } = req.query;
       term = term.toLowerCase();
-      await Book.findAll({
+      try {
+      const results = await Book.findAll({
         order: [['createdAt', 'DESC']],
         where: {
           title: { [Op.like]: '%' + term + '%'},
@@ -86,8 +87,15 @@ function asyncHandler(cb){
           year: { [Op.like]: '%' + term + '%'}
         }
       })
-      .then(books => res.render('search', { books, title: 'Search Results' }))
-      .catch(err => console.log(err))
+      res.render('search', {
+        books: results,
+        title: "Search Results"
+      })
+    } catch (error) {
+      throw error
+    }
+      //.then(books => res.render('search', { books, title: 'Search Results' }))
+      //.catch(err => console.log(err))
     })
 
   //show book detail form
