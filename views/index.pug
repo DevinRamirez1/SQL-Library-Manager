@@ -7,8 +7,8 @@ block content
         a.button(href="/books/new") Create New Book 
 
     .search 
-        form(action='/books/search', method='get')
-            input(name="search", type="text",  placeholder="Search Books")
+        form(action=`/books/search`, method='get')
+            input(name="term", type="search",  placeholder="Search Books")
             input#search(type="submit" value="Search")
 
     table 
@@ -31,5 +31,5 @@ block content
     footer 
         while n <= pages 
             - isActive = activePage == n;
-            a.pages(href='/books/page_:${n}' class= isActive ? 'active' : '')= n 
+            a.pages(href=`/books/page_:${n}` class= isActive ? 'active' : '')= n 
             - n++
