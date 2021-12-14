@@ -32,22 +32,6 @@ function asyncHandler(cb){
      });
   }));
 
-  //Handles search
-  router.get('/search', (req, res) => {
-    let { term } = req.query;
-    term = term.toLowerCase();
-    Book.findAll({
-      where: {
-        title: { [Op.like]: '%' + term + '%'},
-        author: { [Op.like]: '%'+ term + '%'},
-        genre: { [Op.like]: '%' + term + '%'},
-        year: { [Op.like]: '%' + term + '%'}
-      }
-    })
-    .then(books => res.render('search', { books, title: 'Search Results' }))
-    .catch(err => console.log(err))
-  })
-
   //Get specific page
   router.get('/page_:id', asyncHandler(async (req, res) => {
     const limit = 10;
@@ -60,7 +44,7 @@ function asyncHandler(cb){
     });
     const pages = Math.ceil(count / 10);
     console.log(activePage)
-    res.render('books/index', {
+    res.render('index', {
       books: rows,
       title: "Books",
       pages,
@@ -88,6 +72,23 @@ function asyncHandler(cb){
         }
     }
   }));
+
+    //Handles search
+    router.get('/search', async (req, res) => {
+      let { term } = req.query;
+      term = term.toLowerCase();
+      await Book.findAll({
+        order: [['createdAt', 'DESC']],
+        where: {
+          title: { [Op.like]: '%' + term + '%'},
+          author: { [Op.like]: '%'+ term + '%'},
+          genre: { [Op.like]: '%' + term + '%'},
+          year: { [Op.like]: '%' + term + '%'}
+        }
+      })
+      .then(books => res.render('search', { books, title: 'Search Results' }))
+      .catch(err => console.log(err))
+    })
 
   //show book detail form
   router.get('/:id', asyncHandler(async (req, res) => {
