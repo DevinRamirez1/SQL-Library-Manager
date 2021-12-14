@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
+const createError = require('http-errors');
 const Sequelize = require('sequelize');
-const { Op } = Sequelize.Op;
+const Op = Sequelize.Op;
 
 //Handler function to wrap each route
 function asyncHandler(cb){
@@ -31,11 +32,27 @@ function asyncHandler(cb){
      });
   }));
 
+  //Handles search
+  router.get('/search', (req, res) => {
+    let { term } = req.query;
+    term = term.toLowerCase();
+    Book.findAll({
+      where: {
+        title: { [Op.like]: '%' + term + '%'},
+        author: { [Op.like]: '%'+ term + '%'},
+        genre: { [Op.like]: '%' + term + '%'},
+        year: { [Op.like]: '%' + term + '%'}
+      }
+    })
+    .then(books => res.render('search', { books, title: 'Search Results' }))
+    .catch(err => console.log(err))
+  })
+
   //Get specific page
-  router.get('/page_:num', asyncHandler(async (req, res) => {
+  router.get('/page_:id', asyncHandler(async (req, res) => {
     const limit = 10;
-    const offset = req.params.num > 1 ? (req.params.num - 1) * limit : 0
-    const activePage = req.params.num;
+    const offset = req.params.id > 1 ? (req.params.id - 1) * limit : 0
+    const activePage = req.params.id;
     const { count, rows } = await Book.findAndCountAll({
       order: [['createdAt', 'DESC']],
       limit,
@@ -43,7 +60,7 @@ function asyncHandler(cb){
     });
     const pages = Math.ceil(count / 10);
     console.log(activePage)
-    res.render('index', {
+    res.render('books/index', {
       books: rows,
       title: "Books",
       pages,
@@ -115,47 +132,12 @@ function asyncHandler(cb){
     }
   }));
 
-  //Handles search
-  router.get('/search', asyncHandler(async (req, res, next) => {
-    let { search } = req.query;
-    if (search) {
-    const { count, rows } = await Book.findAndCountAll({
-      where: {
-        [Op.or]: [
-          {
-            title: {
-              [Op.like]: '%' + search + '%',
-            },
-          },
-          {
-            author: {
-              [Op.like]: '%' + search + '%',
-            },
-          },
-          {
-            genre: {
-              [Op.like]: '%' + search + '%',
-            },
-          },
-          {
-            year: {
-              [Op.like]: '%' + search + '%',
-            },
-          },
-        ],
-        limit: 10
-      },
-    });
-    const pages = Math.ceil(count / 10);
-    res.render('index', { 
-      books: rows,
-      title: "Search Results",
-      pages,
-      activePage: 1
-    });
-  } else {
-    res.redirect('/')
-  }
-  }));
+  //Error handler
+  router.get('/error', (req, res, next) => {
+    const err = new Error();
+    err.message = `Server Error`;
+    err.status = 500;
+    throw err;
+  });
 
   module.exports = router;
