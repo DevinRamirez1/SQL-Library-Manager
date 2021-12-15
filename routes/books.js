@@ -46,26 +46,6 @@ function asyncHandler(cb){
     }
   }));
 
-  //Get specific page
-  // router.get('/page_:id', asyncHandler(async (req, res) => {
-  //   const limit = 10;
-  //   const offset = req.query.page > 1 ? (req.query.page - 1) * limit : 0
-  //   const activePage = req.params.id;
-  //   const { count, rows } = await Book.findAndCountAll({
-  //     order: [['createdAt', 'DESC']],
-  //     limit,
-  //     offset,
-  //   });
-  //   const pages = Math.ceil(count / 10);
-  //   console.log(activePage)
-  //   res.render('index', {
-  //     books: rows,
-  //     title: "Books",
-  //     pages,
-  //     activePage,
-  //   });
-  // }));
-
   //create new book
   router.get('/new',(req, res) => {
     res.render("new-book", { book: {}, title: "New Book"});
@@ -110,9 +90,7 @@ function asyncHandler(cb){
     } catch (error) {
       throw error
     }
-      //.then(books => res.render('search', { books, title: 'Search Results' }))
-      //.catch(err => console.log(err))
-    })
+  })
 
   //show book detail form
   router.get('/:id', asyncHandler(async (req, res) => {
