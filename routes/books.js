@@ -18,39 +18,53 @@ function asyncHandler(cb){
 
   //Get books for homepage
   router.get('/', asyncHandler(async (req, res) => {
+    try {
+      const currentPage = 
+        req.query.page && Number(req.query.page) > 0 ? Number(req.query.page) : 0;
+      const offset = currentPage * 10;
+      const prevPage = currentPage - 1 >= 0 ? currentPage - 1 : 0;
+      const nextPage = currentPage + 1;
     const {count, rows} = await Book.findAndCountAll({ 
       order: [['createdAt', 'DESC']],
+      offset: offset,
       limit: 10
     });
-    const pages = Math.ceil(count /10);
-    console.log(pages)
+    const totalPages = count / 10;
+    const page = {
+      prevPage,
+      currentPage,
+      nextPage,
+      totalPages
+    };
     res.render('index', { 
       books: rows,
       title: "Books",
-      pages,
-      activePage: 1,
+      page,
      });
+    } catch (error) {
+      throw error
+    }
   }));
 
   //Get specific page
-  router.get('/page_:id', asyncHandler(async (req, res) => {
-    const limit = 10;
-    const offset = req.params.id > 1 ? (req.params.id - 1) * limit : 0
-    const activePage = req.params.id;
-    const { count, rows } = await Book.findAndCountAll({
-      order: [['createdAt', 'DESC']],
-      limit,
-      offset,
-    });
-    const pages = Math.ceil(count / 10);
-    console.log(activePage)
-    res.render('index', {
-      books: rows,
-      title: "Books",
-      pages,
-      activePage,
-    });
-  }));
+  // router.get('/page_:id', asyncHandler(async (req, res) => {
+  //   const limit = 10;
+  //   const offset = req.query.page > 1 ? (req.query.page - 1) * limit : 0
+  //   const activePage = req.params.id;
+  //   const { count, rows } = await Book.findAndCountAll({
+  //     order: [['createdAt', 'DESC']],
+  //     limit,
+  //     offset,
+  //   });
+  //   const pages = Math.ceil(count / 10);
+  //   console.log(activePage)
+  //   res.render('index', {
+  //     books: rows,
+  //     title: "Books",
+  //     pages,
+  //     activePage,
+  //   });
+  // }));
 
   //create new book
   router.get('/new',(req, res) => {
@@ -81,12 +95,14 @@ function asyncHandler(cb){
       const results = await Book.findAll({
         order: [['createdAt', 'DESC']],
         where: {
-          title: { [Op.like]: '%' + term + '%'},
-          author: { [Op.like]: '%'+ term + '%'},
-          genre: { [Op.like]: '%' + term + '%'},
-          year: { [Op.like]: '%' + term + '%'}
+          [Op.or]:[
+          {title: { [Op.like]: '%' + term + '%'}},
+          {author: { [Op.like]: '%'+ term + '%'}},
+          {genre: { [Op.like]: '%' + term + '%'}},
+          {year: { [Op.like]: '%' + term + '%'}}
+          ]
         }
-      })
+      });
       res.render('search', {
         books: results,
         title: "Search Results"
