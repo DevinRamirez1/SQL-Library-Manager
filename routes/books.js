@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
+const app = express();
 const createError = require('http-errors');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -11,7 +12,8 @@ function asyncHandler(cb){
     try {
       await cb(req, res, next)
       } catch(error){
-        res.status(500).send(error);
+        //Forward error to global error handler
+        next(error);
       }
     }
   }
@@ -93,12 +95,12 @@ function asyncHandler(cb){
   })
 
   //show book detail form
-  router.get('/:id', asyncHandler(async (req, res) => {
+  router.get('/:id', asyncHandler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
         res.render('update-book', { book, title: 'Update Book'});
     } else {
-        res.sendStatus(404, "That book does not exist. Please try again.");
+        next(createError(404, 'That book does not exist.'))
     }
   }));
 
@@ -111,7 +113,7 @@ function asyncHandler(cb){
             await book.update(req.body);
             res.redirect('/books/');
         } else {
-            res.sendStatus(404, "That book does not exist. Please try again.");
+            next(createError(404, "That book does not exist. Please try again."));
         }
     } catch (error) {
         if (error.name === 'SequelizeValidationError') {
@@ -125,13 +127,13 @@ function asyncHandler(cb){
   }));
 
   //Deletes book from database
-  router.post('/:id/delete', asyncHandler(async (req, res) => {
+  router.post('/:id/delete', asyncHandler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
        await book.destroy();
        res.redirect('/books/');
     } else {
-        res.sendStatus(404, "That book does not exist. Please try again.");
+        next(createError(404, 'That book does not exist'));
     }
   }));
 
