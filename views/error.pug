@@ -2,6 +2,8 @@ extends layout
 
 block content
   link(rel='stylesheet', href='/stylesheets/style.css')
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  h1 Server Error
+  p Sorry! #{err.message}
+  br
+  p 
+    a.button(href='/') Home 
