@@ -8,16 +8,16 @@ block content
     form(action="/books/new", method="post") 
         p
             label(for="title") Title 
-            input#title(name="title" type="text" value="title")
+            input#title(name="title" type="text" placeholder="title")
         p
             label(for="author") Author 
-            input#author(name="author" type="text" value="author")
+            input#author(name="author" type="text" placeholder="author")
         p 
             label(for="genre") Genre 
-            input#genre(name="genre" type="text" value="genre")
+            input#genre(name="genre" type="text" placeholder="genre")
         p 
             label(for="year") Year 
-            input#year(name="year" type="text" value="year")
+            input#year(name="year" type="text" placeholder="year")
         p 
             input(type="submit", value="Create New Book")
         p 
